@@ -1,37 +1,36 @@
-<script>
+<script setup lang="ts">
 import { ref } from "vue";
 
-export default {
-    setup() {
-        const items = ref([
-            { id: 0, title: "Item A", list: 1 },
-            { id: 1, title: "Item B", list: 1 },
-            { id: 2, title: "Item C", list: 2 },
-        ]);
+interface itemType {
+  id: number,
+  title: string,
+  list: number
+}
 
-        const getList = (list) => {
-            return items.value.filter((item) => item.list == list);
-        };
+const items = ref<itemType[]>([
+    { id: 0, title: "Item A", list: 1 },
+    { id: 1, title: "Item B", list: 1 },
+    { id: 2, title: "Item C", list: 2 },
+]);
 
-        const startDrag = (event, item) => {
-            console.log(item);
-            event.dataTransfer.dropEffect = "move";
-            event.dataTransfer.effectAllowed = "move";
-            event.dataTransfer.setData("itemID", item.id);
-        };
-
-        const onDrop = (event, list) => {
-            const itemID = event.dataTransfer.getData("itemID");
-            const item = items.value.find((item) => item.id == itemID);
-            item.list = list;
-        };
-        return {
-            getList,
-            onDrop,
-            startDrag,
-        };
-    },
+const getList = (list : itemType) => {
+    return items.value.filter((item) => item.list == list);
 };
+
+const startDrag = (event, item) => {
+    console.log(item);
+    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("itemID", item.id);
+};
+
+const onDrop = (event, list) => {
+    const itemID = event.dataTransfer.getData("itemID");
+    const item = items.value.find((item) => item.id == itemID);
+    item.list = list;
+};
+
+
 </script>
 
 <template>
