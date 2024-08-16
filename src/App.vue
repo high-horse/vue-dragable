@@ -8,7 +8,6 @@
         <router-view></router-view>
     </main>
   </div>
-    <h1>test</h1>
 </template>
 
 <style scoped></style>
