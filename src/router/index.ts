@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
-import { auth } from "../store/auth.ts";
+import { useAuth } from "../store/auth.ts";
 
 import Dragable from "../views/Dragable.vue";
 import Login from "../views/Login.vue";
@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: false },
   },
   {
-    path: "/",
+    path: "/dragable",
     name: "Dragable",
     component: Dragable,
     meta: { requiresAuth: false },
@@ -22,11 +22,13 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
-})
+  routes,
+});
+
+const auth = useAuth();
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+  if (to.meta.requiresAuth && !auth.state.isAuthenticated) {
     next("/");
   } else {
     next();
