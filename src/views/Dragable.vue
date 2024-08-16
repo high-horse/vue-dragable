@@ -1,0 +1,3 @@
+<template>
+Dragable view
+</template>
