@@ -16,9 +16,6 @@ const items = ref<ItemType[]>([
 const getList = computed(() => (list: number) => 
   items.value.filter((item) => item.list === list)
 );
-// const getList = (list : number) => {
-//     return items.value.filter((item) => item.list == list);
-// };
 
 const startDrag = (event: DragEvent, item: ItemType) => {
   if (event.dataTransfer) {
@@ -29,18 +26,6 @@ const startDrag = (event: DragEvent, item: ItemType) => {
   }
 };
 
-// const onDrop = (event: DragEvent, list:  ItemType['list']) => {
-//   if (event.dataTransfer) {
-//     const itemID = event.dataTransfer.getData("itemID");
-//     const item = items.value.find((item) => item.id.toString() == itemID);
-//     if(item) {
-//       item.list = list;
-//     }
-//   }
-// };
-
-
-
 // const onDrop = (event: DragEvent, list: ItemType['list']) => {
 //   if (event.dataTransfer) {
 //     const itemID = parseInt(event.dataTransfer.getData("itemID"));
@@ -48,15 +33,38 @@ const startDrag = (event: DragEvent, item: ItemType) => {
 //     if (itemIndex !== -1) {
 //       const [item] = items.value.splice(itemIndex, 1);
 //       item.list = list;
-//       const insertIndex = items.value.findIndex((i) => i.list === list);
-//       if (insertIndex === -1) {
+
+//       // Get the drop target
+//       const dropTarget = event.target as HTMLElement;
+//       const dropTargetRect = dropTarget.getBoundingClientRect();
+//       const dropY = event.clientY;
+
+//       // Find the index to insert the item
+//       const listItems = items.value.filter((i) => i.list === list);
+//       let insertIndex = listItems.length;
+
+//       for (let i = 0; i < listItems.length; i++) {
+//         const itemElement = document.getElementById(`item-${listItems[i].id}`);
+//         if (itemElement) {
+//           const itemRect = itemElement.getBoundingClientRect();
+//           if (dropY < itemRect.top + itemRect.height / 2) {
+//             insertIndex = i;
+//             break;
+//           }
+//         }
+//       }
+
+//       // Insert the item at the calculated index
+//       const newIndex = items.value.findIndex((i) => i.list === list && i.id === listItems[insertIndex]?.id);
+//       if (newIndex === -1) {
 //         items.value.push(item);
 //       } else {
-//         items.value.splice(insertIndex, 0, item);
+//         items.value.splice(newIndex, 0, item);
 //       }
 //     }
 //   }
 // };
+
 
 const onDrop = (event: DragEvent, list: ItemType['list']) => {
   if (event.dataTransfer) {
@@ -66,9 +74,6 @@ const onDrop = (event: DragEvent, list: ItemType['list']) => {
       const [item] = items.value.splice(itemIndex, 1);
       item.list = list;
 
-      // Get the drop target
-      const dropTarget = event.target as HTMLElement;
-      const dropTargetRect = dropTarget.getBoundingClientRect();
       const dropY = event.clientY;
 
       // Find the index to insert the item
@@ -96,7 +101,6 @@ const onDrop = (event: DragEvent, list: ItemType['list']) => {
     }
   }
 };
-
 
 </script>
 <template>
