@@ -2,28 +2,33 @@
 import { ref, computed } from "vue";
 
 interface ItemType {
-  id: number,
-  title: string,
-  list: number
+    id: number;
+    title: string;
+    list: number;
 }
 
 const items = ref<ItemType[]>([
     { id: 0, title: "Item A", list: 1 },
     { id: 1, title: "Item B", list: 1 },
     { id: 2, title: "Item C", list: 2 },
+    { id: 3, title: "Item D", list: 2 },
+    { id: 4, title: "Item E", list: 3 },
+    { id: 5, title: "Item F", list: 3 },
+    { id: 6, title: "Item G", list: 4 },
+    { id: 7, title: "Item H", list: 4 },
 ]);
 
-const getList = computed(() => (list: number) => 
-  items.value.filter((item) => item.list === list)
+const getList = computed(
+    () => (list: number) => items.value.filter((item) => item.list === list),
 );
 
 const startDrag = (event: DragEvent, item: ItemType) => {
-  if (event.dataTransfer) {
-      console.log(item);
-      event.dataTransfer.dropEffect = "move";
-      event.dataTransfer.effectAllowed = "move";
-      event.dataTransfer.setData("itemID", item.id.toString());
-  }
+    if (event.dataTransfer) {
+        console.log(item);
+        event.dataTransfer.dropEffect = "move";
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("itemID", item.id.toString());
+    }
 };
 
 // const onDrop = (event: DragEvent, list: ItemType['list']) => {
@@ -65,95 +70,118 @@ const startDrag = (event: DragEvent, item: ItemType) => {
 //   }
 // };
 
+const onDrop = (event: DragEvent, list: ItemType["list"]) => {
+    if (event.dataTransfer) {
+        const itemID = parseInt(event.dataTransfer.getData("itemID"));
+        const itemIndex = items.value.findIndex((item) => item.id === itemID);
+        if (itemIndex !== -1) {
+            const [item] = items.value.splice(itemIndex, 1);
+            item.list = list;
 
-const onDrop = (event: DragEvent, list: ItemType['list']) => {
-  if (event.dataTransfer) {
-    const itemID = parseInt(event.dataTransfer.getData("itemID"));
-    const itemIndex = items.value.findIndex((item) => item.id === itemID);
-    if (itemIndex !== -1) {
-      const [item] = items.value.splice(itemIndex, 1);
-      item.list = list;
+            const dropY = event.clientY;
 
-      const dropY = event.clientY;
+            // Find the index to insert the item
+            const listItems = items.value.filter((i) => i.list === list);
+            let insertIndex = listItems.length;
 
-      // Find the index to insert the item
-      const listItems = items.value.filter((i) => i.list === list);
-      let insertIndex = listItems.length;
+            for (let i = 0; i < listItems.length; i++) {
+                const itemElement = document.getElementById(
+                    `item-${listItems[i].id}`,
+                );
+                if (itemElement) {
+                    const itemRect = itemElement.getBoundingClientRect();
+                    if (dropY < itemRect.top + itemRect.height / 2) {
+                        insertIndex = i;
+                        break;
+                    }
+                }
+            }
 
-      for (let i = 0; i < listItems.length; i++) {
-        const itemElement = document.getElementById(`item-${listItems[i].id}`);
-        if (itemElement) {
-          const itemRect = itemElement.getBoundingClientRect();
-          if (dropY < itemRect.top + itemRect.height / 2) {
-            insertIndex = i;
-            break;
-          }
+            // Insert the item at the calculated index
+            const newIndex = items.value.findIndex(
+                (i) => i.list === list && i.id === listItems[insertIndex]?.id,
+            );
+            if (newIndex === -1) {
+                items.value.push(item);
+            } else {
+                items.value.splice(newIndex, 0, item);
+            }
         }
-      }
-
-      // Insert the item at the calculated index
-      const newIndex = items.value.findIndex((i) => i.list === list && i.id === listItems[insertIndex]?.id);
-      if (newIndex === -1) {
-        items.value.push(item);
-      } else {
-        items.value.splice(newIndex, 0, item);
-      }
     }
-  }
 };
-
 </script>
 <template>
-    <div class="drop-zone" @drop="onDrop($event, 1)" @dragenter.prevent @dragover.prevent>
+    <div class="grid grid-cols-4 gap-4">
         <div
-            v-for="item in getList(1)"
-            :key="item.id"
-            :id="`item-${item.id}`"
-            class="drag-el"
-            draggable="true"
-            @dragstart="startDrag($event, item)"
+            class="drop-zone bg-red-300"
+            @drop="onDrop($event, 1)"
+            @dragenter.prevent
+            @dragover.prevent
         >
-            {{ item.title }}
+            <div
+                v-for="item in getList(1)"
+                :key="item.id"
+                :id="`item-${item.id}`"
+                class="drag-el"
+                draggable="true"
+                @dragstart="startDrag($event, item)"
+            >
+                {{ item.title }}
+            </div>
         </div>
-    </div>
-    <div class="drop-zone" @drop="onDrop($event, 2)" @dragenter.prevent @dragover.prevent>
         <div
-            v-for="item in getList(2)"
-            :key="item.id"
-            :id="`item-${item.id}`"
-            class="drag-el"
-            draggable="true"
-            @dragstart="startDrag($event, item)"
+            class="drop-zone bg-yellow-300"
+            @drop="onDrop($event, 2)"
+            @dragenter.prevent
+            @dragover.prevent
         >
-            {{ item.title }}
+            <div
+                v-for="item in getList(2)"
+                :key="item.id"
+                :id="`item-${item.id}`"
+                class="drag-el"
+                draggable="true"
+                @dragstart="startDrag($event, item)"
+            >
+                {{ item.title }}
+            </div>
+        </div>
+        <div
+            class="drop-zone bg-green-300"
+            @drop="onDrop($event, 3)"
+            @dragenter.prevent
+            @dragover.prevent
+        >
+            <div
+                v-for="item in getList(3)"
+                :key="item.id"
+                :id="`item-${item.id}`"
+                class="drag-el"
+                draggable="true"
+                @dragstart="startDrag($event, item)"
+            >
+                {{ item.title }}
+            </div>
+        </div>
+        <div
+            class="drop-zone bg-blue-300"
+            @drop="onDrop($event, 4)"
+            @dragenter.prevent
+            @dragover.prevent
+        >
+            <div
+                v-for="item in getList(4)"
+                :key="item.id"
+                :id="`item-${item.id}`"
+                class="drag-el"
+                draggable="true"
+                @dragstart="startDrag($event, item)"
+            >
+                {{ item.title }}
+            </div>
         </div>
     </div>
 </template>
-
-<!-- <template>
-    <div class="drop-zone" @drop="onDrop($event, 1)" @dragenter.prevent @dragover.prevent>
-        <div
-            v-for="item in getList(1)"
-            :key="item.id"
-            class="drag-el"
-            draggable="true"
-            @dragstart="startDrag($event, item)"
-        >
-            {{ item.title }}
-        </div>
-    </div>
-    <div class="drop-zone" @drop="onDrop($event, 2)" @dragenter.prevent @dragover.prevent>
-        <div
-            v-for="item in getList(2)"
-            :key="item.id"
-            class="drag-el"
-            draggable="true"
-            @dragstart="startDrag($event, item)"
-        >
-            {{ item.title }}
-        </div>
-    </div>
-</template> -->
 
 <style scoped>
 .drop-zone {
