@@ -14,7 +14,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/dragable",
-    name: "Dragable",
+    name: "dragable",
     component: Dragable,
     meta: { requiresAuth: false },
   },
