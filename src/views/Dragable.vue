@@ -16,6 +16,14 @@ const items = ref<ItemType[]>([
     { id: 5, title: "Item F", list: 3 },
     { id: 6, title: "Item G", list: 4 },
     { id: 7, title: "Item H", list: 4 },
+    { id: 8, title: "Item I", list: 1 },
+    { id: 9, title: "Item J", list: 1 },
+    { id: 10, title: "Item I", list: 2 },
+    { id: 11, title: "Item J", list: 2 },
+    { id: 12, title: "Item I", list: 3 },
+    { id: 13, title: "Item J", list: 3 },
+    { id: 14, title: "Item I", list: 4 },
+    { id: 15, title: "Item J", list: 4 },
 ]);
 
 const getList = computed(
@@ -112,7 +120,9 @@ const onDrop = (event: DragEvent, list: ItemType["list"]) => {
 </script>
 <template>
     <div>
-        <button class="bg-purple-800 p-2 rounded-full hover:bg-purple-400">add item</button>
+        <button class="bg-purple-800 p-2 rounded-full hover:bg-purple-400">
+            add item
+        </button>
     </div>
     <div class="grid grid-cols-4 gap-4">
         <div
@@ -121,15 +131,18 @@ const onDrop = (event: DragEvent, list: ItemType["list"]) => {
             @dragenter.prevent
             @dragover.prevent
         >
-            <div
-                v-for="item in getList(1)"
-                :key="item.id"
-                :id="`item-${item.id}`"
-                class="drag-el"
-                draggable="true"
-                @dragstart="startDrag($event, item)"
-            >
-                {{ item.title }}
+            <span class="color-label">Group 1:</span><br />
+            <div class="scroll-cls">
+                <div
+                    v-for="item in getList(1)"
+                    :key="item.id"
+                    :id="`item-${item.id}`"
+                    class="drag-el"
+                    draggable="true"
+                    @dragstart="startDrag($event, item)"
+                >
+                    {{ item.title }}
+                </div>
             </div>
         </div>
         <div
@@ -138,15 +151,18 @@ const onDrop = (event: DragEvent, list: ItemType["list"]) => {
             @dragenter.prevent
             @dragover.prevent
         >
-            <div
-                v-for="item in getList(2)"
-                :key="item.id"
-                :id="`item-${item.id}`"
-                class="drag-el"
-                draggable="true"
-                @dragstart="startDrag($event, item)"
-            >
-                {{ item.title }}
+            <span class="color-label">Group 2:</span><br />
+            <div class="scroll-cls">
+                <div
+                    v-for="item in getList(2)"
+                    :key="item.id"
+                    :id="`item-${item.id}`"
+                    class="drag-el"
+                    draggable="true"
+                    @dragstart="startDrag($event, item)"
+                >
+                    {{ item.title }}
+                </div>
             </div>
         </div>
         <div
@@ -155,15 +171,18 @@ const onDrop = (event: DragEvent, list: ItemType["list"]) => {
             @dragenter.prevent
             @dragover.prevent
         >
-            <div
-                v-for="item in getList(3)"
-                :key="item.id"
-                :id="`item-${item.id}`"
-                class="drag-el"
-                draggable="true"
-                @dragstart="startDrag($event, item)"
-            >
-                {{ item.title }}
+            <span class="color-label">Group 3:</span><br />
+            <div class="scroll-cls">
+                <div
+                    v-for="item in getList(3)"
+                    :key="item.id"
+                    :id="`item-${item.id}`"
+                    class="drag-el"
+                    draggable="true"
+                    @dragstart="startDrag($event, item)"
+                >
+                    {{ item.title }}
+                </div>
             </div>
         </div>
         <div
@@ -172,33 +191,54 @@ const onDrop = (event: DragEvent, list: ItemType["list"]) => {
             @dragenter.prevent
             @dragover.prevent
         >
-            <div
-                v-for="item in getList(4)"
-                :key="item.id"
-                :id="`item-${item.id}`"
-                class="drag-el"
-                draggable="true"
-                @dragstart="startDrag($event, item)"
-            >
-                {{ item.title }}
+            <span class="color-label">Group 4:</span><br />
+            <div class="scroll-cls">
+                <div
+                    v-for="item in getList(4)"
+                    :key="item.id"
+                    :id="`item-${item.id}`"
+                    class="drag-el"
+                    draggable="true"
+                    @dragstart="startDrag($event, item)"
+                >
+                    {{ item.title }}
+                </div>
             </div>
         </div>
     </div>
 </template>
 
+
 <style scoped>
+/* Ensure the drop-zone takes up full height up to the max-height */
 .drop-zone {
     border: 1px solid #ddd;
     padding: 1rem;
     margin: 1rem;
-    min-height: 200px;
+    display: flex; /* Use flex to handle inner elements properly */
+    flex-direction: column; /* Stack items vertically */
+    max-height: 87vh; /* Constrain height */
+    overflow: hidden; /* Hide overflow to handle it in the scroll container */
 }
 
+/* The scroll container should take all the remaining height and allow scrolling */
+.scroll-cls {
+    flex: 1; /* Take remaining height in drop-zone */
+    overflow-y: auto; /* Enable scrolling */
+}
+
+/* Styling for drag elements */
 .drag-el {
     border: 1px solid #ccc;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     background-color: #f9f9f9;
+    color: black;
+}
+
+/* Color label styling */
+.color-label {
+    font-weight: bold;
     color: black;
 }
 </style>
