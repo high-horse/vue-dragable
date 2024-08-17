@@ -111,6 +111,9 @@ const onDrop = (event: DragEvent, list: ItemType["list"]) => {
 };
 </script>
 <template>
+    <div>
+        <button class="bg-purple-800 p-2 rounded-full hover:bg-purple-400">add item</button>
+    </div>
     <div class="grid grid-cols-4 gap-4">
         <div
             class="drop-zone bg-red-300"
