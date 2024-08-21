@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import Alert from "../components/alert/Alert.vue";
+import AddItemForm from "../components/form/AddItem.vue";
 
+const modelAction = ref<boolean>(false);
 interface ItemType {
     id: number;
     title: string;
@@ -38,45 +41,6 @@ const startDrag = (event: DragEvent, item: ItemType) => {
         event.dataTransfer.setData("itemID", item.id.toString());
     }
 };
-
-// const onDrop = (event: DragEvent, list: ItemType['list']) => {
-//   if (event.dataTransfer) {
-//     const itemID = parseInt(event.dataTransfer.getData("itemID"));
-//     const itemIndex = items.value.findIndex((item) => item.id === itemID);
-//     if (itemIndex !== -1) {
-//       const [item] = items.value.splice(itemIndex, 1);
-//       item.list = list;
-
-//       // Get the drop target
-//       const dropTarget = event.target as HTMLElement;
-//       const dropTargetRect = dropTarget.getBoundingClientRect();
-//       const dropY = event.clientY;
-
-//       // Find the index to insert the item
-//       const listItems = items.value.filter((i) => i.list === list);
-//       let insertIndex = listItems.length;
-
-//       for (let i = 0; i < listItems.length; i++) {
-//         const itemElement = document.getElementById(`item-${listItems[i].id}`);
-//         if (itemElement) {
-//           const itemRect = itemElement.getBoundingClientRect();
-//           if (dropY < itemRect.top + itemRect.height / 2) {
-//             insertIndex = i;
-//             break;
-//           }
-//         }
-//       }
-
-//       // Insert the item at the calculated index
-//       const newIndex = items.value.findIndex((i) => i.list === list && i.id === listItems[insertIndex]?.id);
-//       if (newIndex === -1) {
-//         items.value.push(item);
-//       } else {
-//         items.value.splice(newIndex, 0, item);
-//       }
-//     }
-//   }
-// };
 
 const onDrop = (event: DragEvent, list: ItemType["list"]) => {
     if (event.dataTransfer) {
@@ -120,7 +84,13 @@ const onDrop = (event: DragEvent, list: ItemType["list"]) => {
 </script>
 <template>
     <div>
-        <button class="bg-purple-800 p-2 rounded-full hover:bg-purple-400">
+        <AddItemForm />
+    </div>
+    <div>
+        <Alert :modelAction="modelAction" @modelAction="modelAction = !modelAction"/>
+    </div>
+    <div>
+        <button class="bg-purple-800 p-2 rounded-full hover:bg-purple-400" @click="modelAction = !modelAction">
             add item
         </button>
     </div>
