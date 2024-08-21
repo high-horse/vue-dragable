@@ -84,10 +84,11 @@ const onDrop = (event: DragEvent, list: ItemType["list"]) => {
 </script>
 <template>
     <div>
-        <AddItemForm />
-    </div>
-    <div>
-        <Alert :modelAction="modelAction" @modelAction="modelAction = !modelAction"/>
+        <Alert :modelAction="modelAction" @modelAction="modelAction = !modelAction">
+            <template #formBody>
+                <AddItemForm />
+            </template>
+        </Alert>
     </div>
     <div>
         <button class="bg-purple-800 p-2 rounded-full hover:bg-purple-400" @click="modelAction = !modelAction">

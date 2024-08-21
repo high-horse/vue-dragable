@@ -11,7 +11,7 @@
                 Connect Request
             </div>
             <div name="body" class="mt-8">
-                <slot id="formBody"></slot>
+               <slot name="formBody"></slot>
             </div>
             <div class="alert-dialog-buttons mt-8">
                 <button

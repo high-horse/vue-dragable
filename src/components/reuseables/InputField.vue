@@ -4,9 +4,9 @@ const props = defineProps<InputFieldProps>();
 </script>
 
 <template>
-    <span :class="py-2">
-        <label :for="props.id">{{props.label}}</label>
-        <inpu
+    <span class="py-2">
+        <label :for="props.id">{{ props.label }}</label>
+        <input
             :type="props.type"
             :name="props.name"
             :id="props.id"
@@ -16,3 +16,4 @@ const props = defineProps<InputFieldProps>();
         />
     </span>
 </template>
+s
